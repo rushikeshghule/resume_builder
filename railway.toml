@@ -1,0 +1,10 @@
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "python manage.py migrate && gunicorn resumecraft.wsgi:application"
+healthcheckPath = "/"
+healthcheckTimeout = 100
+
+[nixpacks]
+build-cmd = "apt-get update && apt-get install -y libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0 libgdk-pixbuf2.0-0 libglib2.0-0 libcairo2"

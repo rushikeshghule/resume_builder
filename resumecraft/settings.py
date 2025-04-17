@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,19 +22,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-umq(bc06vel@du6@03i@h1^yeh0v_i6w+10m8bolbtw^*i)1c%'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-umq(bc06vel@du6@03i@h1^yeh0v_i6w+10m8bolbtw^*i)1c%')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost','resumebuilder-production-9828.up.railway.app']
+# Use environment variables with sensible defaults including Railway.app domain
+ALLOWED_HOSTS = os.environ.get(
+    'ALLOWED_HOSTS', 
+    '0.0.0.0,127.0.0.1,localhost,resumebuilder-production-9828.up.railway.app'
+).split(',')
 
-CSRF_TRUSTED_ORIGINS = [
-    'http://127.0.0.1:39313',
-    'http://0.0.0.0:8000',
-    'http://localhost:8000',
-    'https://resumebuilder-production-9828.up.railway.app/',
-]
+# Get CSRF trusted origins from environment or use defaults including Railway.app domain
+CSRF_TRUSTED_ORIGINS = os.environ.get(
+    'CSRF_TRUSTED_ORIGINS',
+    'http://127.0.0.1:39313,http://0.0.0.0:8000,http://localhost:8000,https://resumebuilder-production-9828.up.railway.app'
+).split(',')
 
 # Application definition
 
@@ -55,6 +60,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add WhiteNoise for static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -86,11 +92,13 @@ WSGI_APPLICATION = 'resumecraft.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# Use DATABASE_URL environment variable if available, otherwise use SQLite
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f'sqlite:///{os.path.join(BASE_DIR, "db.sqlite3")}',
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 
@@ -132,6 +140,9 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# Enable WhiteNoise compression and caching support
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -148,3 +159,20 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'login'
+
+# Settings for WeasyPrint (optional)
+WEASYPRINT_OPTIONS = {
+    'encoding': 'utf8',
+}
+
+# Security settings for production
+if not DEBUG:
+    # HTTPS settings
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+    
+    # HSTS settings
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_PRELOAD = True
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
