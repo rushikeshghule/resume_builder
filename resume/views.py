@@ -17,9 +17,15 @@ import uuid
 import json
 import copy
 from datetime import datetime
-from weasyprint import HTML, CSS
-# Updated import for WeasyPrint
-# from weasyprint.fonts import FontConfiguration
+
+# Try to import WeasyPrint, but don't fail if it's not available
+WEASYPRINT_AVAILABLE = False
+try:
+    from weasyprint import HTML, CSS
+    WEASYPRINT_AVAILABLE = True
+except ImportError:
+    # WeasyPrint not available, will use fallback for PDF generation
+    pass
 
 from .models import (
     Resume, Education, WorkExperience, 
@@ -369,59 +375,52 @@ def download_pdf(request, slug):
         'photo_data_uri': photo_data_uri  # Pass the photo data URI to the template
     }
     
-    # Modify the template to force the PDF mode by adding a class to the body tag
+    # Render the template with resume data
     html_string = render_to_string(template_path, context)
     
-    # Add is-pdf class to body tag if not already present
-    import re
-    body_tag_pattern = re.compile(r'<body([^>]*)>')
-    
-    def add_pdf_class(match):
-        body_attrs = match.group(1)
-        if 'class=' in body_attrs:
-            # If class attribute exists, add is-pdf to it
-            body_attrs = re.sub(r'class=["\']([^"\']*)["\']', 
-                               lambda m: f'class="{m.group(1)} is-pdf"', 
-                               body_attrs)
-        else:
-            # If no class attribute, add one with is-pdf
-            body_attrs += ' class="is-pdf"'
-        return f'<body{body_attrs}>'
-    
-    html_string = body_tag_pattern.sub(add_pdf_class, html_string)
-    
-    # Use the base URL from the request to help resolve relative URLs
-    base_url = f"{request.scheme}://{request.get_host()}"
-    html = HTML(string=html_string, base_url=base_url)
-    
-    # Define CSS for better PDF rendering - minimal to avoid conflicts with template CSS
-    css = CSS(string='''
-        @page {
-            size: letter;
-            margin: 0.5cm;
-        }
-        @media print {
-            body {
-                font-size: 12pt;
-                margin: 0;
-                padding: 0;
-            }
-            .resume-container {
-                margin: 0 !important;
-                box-shadow: none !important;
-            }
-        }
-    ''')
-    
-    # Generate PDF
-    pdf = html.write_pdf(stylesheets=[css])
-    
-    # Create response
-    response = HttpResponse(pdf, content_type='application/pdf')
-    filename = f"resume_{slugify(resume.title)}_{datetime.now().strftime('%Y%m%d')}.pdf"
-    response['Content-Disposition'] = f'attachment; filename="{filename}"'
-    
-    return response
+    # Check if WeasyPrint is available
+    if WEASYPRINT_AVAILABLE:
+        try:
+            # Use the base URL from the request to help resolve relative URLs
+            base_url = f"{request.scheme}://{request.get_host()}"
+            html = HTML(string=html_string, base_url=base_url)
+            
+            # Define CSS for better PDF rendering
+            css = CSS(string='''
+                @page {
+                    size: letter;
+                    margin: 0.5cm;
+                }
+                @media print {
+                    body {
+                        font-size: 12pt;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    .resume-container {
+                        margin: 0 !important;
+                        box-shadow: none !important;
+                    }
+                }
+            ''')
+            
+            # Generate PDF
+            pdf = html.write_pdf(stylesheets=[css])
+            
+            # Create response
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = f"resume_{slugify(resume.title)}_{datetime.now().strftime('%Y%m%d')}.pdf"
+            response['Content-Disposition'] = f'attachment; filename="{filename}"'
+            
+            return response
+        except Exception as e:
+            # If WeasyPrint fails, fall back to HTML
+            messages.error(request, f"PDF generation failed. Showing HTML preview instead. Error: {str(e)}")
+            return render(request, template_path, context)
+    else:
+        # WeasyPrint not available, render HTML view instead
+        messages.warning(request, "PDF generation is not available in this environment. Showing HTML preview instead.")
+        return render(request, template_path, context)
 
 def public_resume(request, slug):
     """View for public resume links"""
