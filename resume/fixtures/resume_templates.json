@@ -1,0 +1,112 @@
+[
+    {
+        "model": "resume.resumetemplate",
+        "pk": 1,
+        "fields": {
+            "name": "Modern",
+            "template_file": "modern.html",
+            "is_dark_mode_supported": true,
+            "description": "A clean, contemporary design with a sidebar for your contact information and skills.",
+            "created_at": "2023-06-15T10:00:00Z"
+        }
+    },
+    {
+        "model": "resume.resumetemplate",
+        "pk": 2,
+        "fields": {
+            "name": "Minimal",
+            "template_file": "minimal.html",
+            "is_dark_mode_supported": true,
+            "description": "A simple, elegant layout that focuses on your content with minimal distractions.",
+            "created_at": "2023-06-15T10:00:00Z"
+        }
+    },
+    {
+        "model": "resume.resumetemplate",
+        "pk": 3,
+        "fields": {
+            "name": "Executive",
+            "template_file": "executive.html",
+            "is_dark_mode_supported": false,
+            "description": "Professional design suited for senior roles and executive positions.",
+            "created_at": "2023-06-15T10:00:00Z"
+        }
+    },
+    {
+        "model": "resume.resumetemplate",
+        "pk": 4,
+        "fields": {
+            "name": "Creative",
+            "template_file": "creative.html",
+            "is_dark_mode_supported": true,
+            "description": "A bold, colorful design for creative professionals and designers.",
+            "created_at": "2023-06-15T10:00:00Z"
+        }
+    },
+    {
+        "model": "resume.resumetemplate",
+        "pk": 5,
+        "fields": {
+            "name": "Technical",
+            "template_file": "technical.html",
+            "is_dark_mode_supported": true,
+            "description": "Designed for developers and engineers, with sections for technical skills and projects.",
+            "created_at": "2023-06-15T10:00:00Z"
+        }
+    },
+    {
+        "model": "resume.resumetemplate",
+        "pk": 6,
+        "fields": {
+            "name": "Elegant",
+            "template_file": "elegant.html",
+            "is_dark_mode_supported": true,
+            "description": "Sophisticated design with serif fonts and classic styling.",
+            "created_at": "2023-06-15T10:00:00Z"
+        }
+    },
+    {
+        "model": "resume.resumetemplate",
+        "pk": 7,
+        "fields": {
+            "name": "Corporate",
+            "template_file": "corporate.html",
+            "is_dark_mode_supported": false,
+            "description": "Traditional corporate style suitable for business and finance sectors.",
+            "created_at": "2023-06-15T10:00:00Z"
+        }
+    },
+    {
+        "model": "resume.resumetemplate",
+        "pk": 8,
+        "fields": {
+            "name": "Academic",
+            "template_file": "academic.html",
+            "is_dark_mode_supported": true,
+            "description": "Formal layout designed for academic CVs and research positions.",
+            "created_at": "2023-06-15T10:00:00Z"
+        }
+    },
+    {
+        "model": "resume.resumetemplate",
+        "pk": 9,
+        "fields": {
+            "name": "Compact",
+            "template_file": "compact.html",
+            "is_dark_mode_supported": true,
+            "description": "Streamlined design that maximizes space for those with extensive experience.",
+            "created_at": "2023-06-15T10:00:00Z"
+        }
+    },
+    {
+        "model": "resume.resumetemplate",
+        "pk": 10,
+        "fields": {
+            "name": "Bold",
+            "template_file": "bold.html",
+            "is_dark_mode_supported": true,
+            "description": "Strong, impactful design that stands out with bold typography and color accents.",
+            "created_at": "2023-06-15T10:00:00Z"
+        }
+    }
+]

@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Education - ResumeCraft{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="h2 mb-3">Edit Education</h1>
+            <p class="text-muted">Resume: {{ resume.title }}</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a href="{% url 'resume_preview' resume.slug %}" class="btn btn-primary">
+                <i class="fas fa-eye me-2"></i> Preview Resume
+            </a>
+        </div>
+    </div>
+    
+    <!-- Wizard Steps Navigation -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="wizard-steps">
+                <div class="wizard-step completed">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Personal</div>
+                </div>
+                <div class="wizard-step active">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Education</div>
+                </div>
+                <div class="wizard-step">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Experience</div>
+                </div>
+                <div class="wizard-step">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Skills</div>
+                </div>
+                <div class="wizard-step">
+                    <div class="step-number">5</div>
+                    <div class="step-label">Projects</div>
+                </div>
+                <div class="wizard-step">
+                    <div class="step-number">6</div>
+                    <div class="step-label">Certifications</div>
+                </div>
+                <div class="wizard-step">
+                    <div class="step-number">7</div>
+                    <div class="step-label">Languages</div>
+                </div>
+                <div class="wizard-step">
+                    <div class="step-number">8</div>
+                    <div class="step-label">References</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="form-container">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ formset.management_form }}
+                    
+                    <div id="education-formset">
+                        {% for form in formset %}
+                            <div class="form-row mb-4 {% if not forloop.last %}border-bottom pb-4{% endif %}">
+                                {% if formset.can_delete %}
+                                    <div class="d-flex justify-content-end mb-2">
+                                        <div class="form-check">
+                                            <input type="checkbox" name="{{ form.DELETE.html_name }}" id="{{ form.DELETE.id_for_label }}" class="form-check-input">
+                                            <label for="{{ form.DELETE.id_for_label }}" class="form-check-label">{{ form.DELETE.label }}</label>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="{{ form.institution.id_for_label }}" class="form-label">{{ form.institution.label }}</label>
+                                        <input type="text" name="{{ form.institution.html_name }}" id="{{ form.institution.id_for_label }}" class="form-control" {% if form.institution.value %}value="{{ form.institution.value }}"{% endif %}>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="{{ form.location.id_for_label }}" class="form-label">{{ form.location.label }}</label>
+                                        <input type="text" name="{{ form.location.html_name }}" id="{{ form.location.id_for_label }}" class="form-control" {% if form.location.value %}value="{{ form.location.value }}"{% endif %}>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="{{ form.degree.id_for_label }}" class="form-label">{{ form.degree.label }}</label>
+                                        <input type="text" name="{{ form.degree.html_name }}" id="{{ form.degree.id_for_label }}" class="form-control" {% if form.degree.value %}value="{{ form.degree.value }}"{% endif %}>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="{{ form.field_of_study.id_for_label }}" class="form-label">{{ form.field_of_study.label }}</label>
+                                        <input type="text" name="{{ form.field_of_study.html_name }}" id="{{ form.field_of_study.id_for_label }}" class="form-control" {% if form.field_of_study.value %}value="{{ form.field_of_study.value }}"{% endif %}>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="{{ form.start_date.id_for_label }}" class="form-label">{{ form.start_date.label }}</label>
+                                        <input type="date" name="{{ form.start_date.html_name }}" id="{{ form.start_date.id_for_label }}" class="form-control" {% if form.start_date.value %}value="{{ form.start_date.value|date:'Y-m-d' }}"{% endif %}>
+                                    </div>
+                                    <div class="col-md-6 mb-3 end-date-field" {% if form.is_current.value %}style="display: none;"{% endif %}>
+                                        <label for="{{ form.end_date.id_for_label }}" class="form-label">{{ form.end_date.label }}</label>
+                                        <input type="date" name="{{ form.end_date.html_name }}" id="{{ form.end_date.id_for_label }}" class="form-control" {% if form.end_date.value %}value="{{ form.end_date.value|date:'Y-m-d' }}"{% endif %}>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="{{ form.is_current.html_name }}" id="{{ form.is_current.id_for_label }}" class="form-check-input" {% if form.is_current.value %}checked{% endif %}>
+                                        <label class="form-check-label is-current-checkbox" for="{{ form.is_current.id_for_label }}">
+                                            Currently studying here
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="{{ form.gpa.id_for_label }}" class="form-label">{{ form.gpa.label }}</label>
+                                    <input type="text" name="{{ form.gpa.html_name }}" id="{{ form.gpa.id_for_label }}" class="form-control" {% if form.gpa.value %}value="{{ form.gpa.value }}"{% endif %}>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="{{ form.description.id_for_label }}" class="form-label">{{ form.description.label }}</label>
+                                    <textarea name="{{ form.description.html_name }}" id="{{ form.description.id_for_label }}" class="form-control" rows="4">{% if form.description.value %}{{ form.description.value }}{% endif %}</textarea>
+                                </div>
+                                
+                                {% for hidden in form.hidden_fields %}
+                                    {{ hidden }}
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="mb-4 text-center">
+                        <button type="button" class="btn btn-outline-primary add-form-row" data-formset="education">
+                            <i class="fas fa-plus-circle me-2"></i> Add Another Education
+                        </button>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'edit_resume_section' resume.slug 'personal' %}" class="btn btn-outline-secondary">Back</a>
+                        <button type="submit" class="btn btn-primary">Save & Continue</button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Empty form template for JS -->
+            <div id="empty-education-form" class="d-none">
+                <div class="form-row mb-4">
+                    {% if formset.can_delete %}
+                        <div class="d-flex justify-content-end mb-2">
+                            <div class="form-check">
+                                <input type="checkbox" name="{{ formset.empty_form.DELETE.html_name }}" id="{{ formset.empty_form.DELETE.id_for_label }}" class="form-check-input">
+                                <label for="{{ formset.empty_form.DELETE.id_for_label }}" class="form-check-label">{{ formset.empty_form.DELETE.label }}</label>
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ formset.empty_form.institution.id_for_label }}" class="form-label">{{ formset.empty_form.institution.label }}</label>
+                            <input type="text" name="{{ formset.empty_form.institution.html_name }}" id="{{ formset.empty_form.institution.id_for_label }}" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ formset.empty_form.location.id_for_label }}" class="form-label">{{ formset.empty_form.location.label }}</label>
+                            <input type="text" name="{{ formset.empty_form.location.html_name }}" id="{{ formset.empty_form.location.id_for_label }}" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ formset.empty_form.degree.id_for_label }}" class="form-label">{{ formset.empty_form.degree.label }}</label>
+                            <input type="text" name="{{ formset.empty_form.degree.html_name }}" id="{{ formset.empty_form.degree.id_for_label }}" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ formset.empty_form.field_of_study.id_for_label }}" class="form-label">{{ formset.empty_form.field_of_study.label }}</label>
+                            <input type="text" name="{{ formset.empty_form.field_of_study.html_name }}" id="{{ formset.empty_form.field_of_study.id_for_label }}" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ formset.empty_form.start_date.id_for_label }}" class="form-label">{{ formset.empty_form.start_date.label }}</label>
+                            <input type="date" name="{{ formset.empty_form.start_date.html_name }}" id="{{ formset.empty_form.start_date.id_for_label }}" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3 end-date-field">
+                            <label for="{{ formset.empty_form.end_date.id_for_label }}" class="form-label">{{ formset.empty_form.end_date.label }}</label>
+                            <input type="date" name="{{ formset.empty_form.end_date.html_name }}" id="{{ formset.empty_form.end_date.id_for_label }}" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" name="{{ formset.empty_form.is_current.html_name }}" id="{{ formset.empty_form.is_current.id_for_label }}" class="form-check-input">
+                            <label class="form-check-label is-current-checkbox" for="{{ formset.empty_form.is_current.id_for_label }}">
+                                Currently studying here
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ formset.empty_form.gpa.id_for_label }}" class="form-label">{{ formset.empty_form.gpa.label }}</label>
+                        <input type="text" name="{{ formset.empty_form.gpa.html_name }}" id="{{ formset.empty_form.gpa.id_for_label }}" class="form-control">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ formset.empty_form.description.id_for_label }}" class="form-label">{{ formset.empty_form.description.label }}</label>
+                        <textarea name="{{ formset.empty_form.description.html_name }}" id="{{ formset.empty_form.description.id_for_label }}" class="form-control" rows="4"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 d-none d-lg-block">
+            <div class="card sticky-top" style="top: 20px;">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Tips for Education</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <i class="fas fa-info-circle text-primary me-2"></i>
+                            List your most recent education first
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-info-circle text-primary me-2"></i>
+                            Include relevant coursework in the description
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-info-circle text-primary me-2"></i>
+                            Only include GPA if it strengthens your application
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-info-circle text-primary me-2"></i>
+                            Include honors and awards in the description
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-info-circle text-primary me-2"></i>
+                            For recent graduates, education often comes before work experience
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle is_current checkboxes
+        const currentCheckboxes = document.querySelectorAll('.is-current-checkbox');
+        
+        currentCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const endDateField = this.closest('.form-row').querySelector('.end-date-field');
+                
+                if (this.checked) {
+                    endDateField.style.display = 'none';
+                } else {
+                    endDateField.style.display = 'block';
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

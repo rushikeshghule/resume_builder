@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}About ResumeCraft - Professional Resume Builder{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <h1 class="display-4 mb-4">About ResumeCraft</h1>
+            <p class="lead text-muted">
+                Creating professional resumes made simple and elegant.
+            </p>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <h2 class="h3 mb-4">Our Mission</h2>
+                    <p>
+                        ResumeCraft was built with a simple goal: make creating professional resumes 
+                        accessible to everyone. We believe that a well-crafted resume can open doors
+                        to opportunities, and no one should miss out because of complex design tools
+                        or expensive services.
+                    </p>
+
+                    <h2 class="h3 mb-4 mt-5">What We Offer</h2>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <i class="fas fa-palette fa-2x text-primary"></i>
+                                </div>
+                                <div>
+                                    <h3 class="h5">Beautiful Templates</h3>
+                                    <p>Choose from our collection of professionally designed resume templates.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <i class="fas fa-file-pdf fa-2x text-primary"></i>
+                                </div>
+                                <div>
+                                    <h3 class="h5">PDF Export</h3>
+                                    <p>Download your resume as a polished PDF ready for job applications.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <i class="fas fa-user-shield fa-2x text-primary"></i>
+                                </div>
+                                <div>
+                                    <h3 class="h5">Privacy First</h3>
+                                    <p>Your data belongs to you. We prioritize security and privacy.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <i class="fas fa-share-alt fa-2x text-primary"></i>
+                                </div>
+                                <div>
+                                    <h3 class="h5">Easy Sharing</h3>
+                                    <p>Share your resume with recruiters with secure, simple links.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="h3 mb-4 mt-5">How It Works</h2>
+                    <ol class="list-group list-group-numbered mb-4">
+                        <li class="list-group-item border-0 ps-0">Create an account and start a new resume</li>
+                        <li class="list-group-item border-0 ps-0">Choose your preferred template</li>
+                        <li class="list-group-item border-0 ps-0">Fill in your details in the structured sections</li>
+                        <li class="list-group-item border-0 ps-0">Preview and fine-tune your resume</li>
+                        <li class="list-group-item border-0 ps-0">Download a professional PDF or share online</li>
+                    </ol>
+                    
+                    <div class="text-center mt-5">
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary me-2">Return Home</a>
+                        <a href="{% url 'dashboard' %}" class="btn btn-primary">Try It Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

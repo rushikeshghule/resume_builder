@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Skills - ResumeCraft{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="section-header animate__animated animate__fadeIn">
+                <h1 class="h2 mb-2">Edit Skills</h1>
+                <p class="text-muted">Resume: <span class="fw-semibold text-primary">{{ resume.title }}</span></p>
+            </div>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a href="{% url 'resume_preview' resume.slug %}" class="btn btn-primary shadow-sm">
+                <i class="fas fa-eye me-2"></i> Preview Resume
+            </a>
+        </div>
+    </div>
+    
+    <!-- Wizard Steps Navigation -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="wizard-steps">
+                <div class="wizard-step completed">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Personal</div>
+                </div>
+                <div class="wizard-step completed">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Education</div>
+                </div>
+                <div class="wizard-step completed">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Experience</div>
+                </div>
+                <div class="wizard-step active">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Skills</div>
+                </div>
+                <div class="wizard-step">
+                    <div class="step-number">5</div>
+                    <div class="step-label">Projects</div>
+                </div>
+                <div class="wizard-step">
+                    <div class="step-number">6</div>
+                    <div class="step-label">Certifications</div>
+                </div>
+                <div class="wizard-step">
+                    <div class="step-number">7</div>
+                    <div class="step-label">Languages</div>
+                </div>
+                <div class="wizard-step">
+                    <div class="step-number">8</div>
+                    <div class="step-label">References</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="form-container shadow-sm animate__animated animate__fadeIn">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ formset.management_form }}
+                    
+                    <div id="skills-formset">
+                        {% for form in formset %}
+                            <div class="form-row mb-4 form-section {% if not forloop.last %}border-bottom pb-4{% endif %}">
+                                <div class="section-header mb-4">
+                                    <h3 class="fs-5">Skill #{{ forloop.counter }}</h3>
+                                </div>
+                                {% if formset.can_delete %}
+                                    <div class="d-flex justify-content-end mb-2">
+                                        <div class="form-check">
+                                            <input type="checkbox" name="{{ form.DELETE.html_name }}" id="{{ form.DELETE.id_for_label }}" class="form-check-input">
+                                            <label for="{{ form.DELETE.id_for_label }}" class="form-check-label">{{ form.DELETE.label }}</label>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="{{ form.name.id_for_label }}" class="form-label">{{ form.name.label }}</label>
+                                        <input type="text" name="{{ form.name.html_name }}" id="{{ form.name.id_for_label }}" class="form-control" {% if form.name.value %}value="{{ form.name.value }}"{% endif %}>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="{{ form.level.id_for_label }}" class="form-label">{{ form.level.label }}</label>
+                                        <select name="{{ form.level.html_name }}" id="{{ form.level.id_for_label }}" class="form-select">
+                                            <option value="beginner" {% if form.level.value == 'beginner' %}selected{% endif %}>Beginner</option>
+                                            <option value="intermediate" {% if form.level.value == 'intermediate' %}selected{% endif %}>Intermediate</option>
+                                            <option value="advanced" {% if form.level.value == 'advanced' %}selected{% endif %}>Advanced</option>
+                                            <option value="expert" {% if form.level.value == 'expert' %}selected{% endif %}>Expert</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="{{ form.description.id_for_label }}" class="form-label">{{ form.description.label }}</label>
+                                    <textarea name="{{ form.description.html_name }}" id="{{ form.description.id_for_label }}" class="form-control" rows="2">{% if form.description.value %}{{ form.description.value }}{% endif %}</textarea>
+                                    <small class="form-text text-muted">Brief description of your proficiency or specific aspects of this skill.</small>
+                                </div>
+                                
+                                {% for hidden in form.hidden_fields %}
+                                    {{ hidden }}
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="mb-4 text-center">
+                        <button type="button" class="btn btn-outline-primary add-form-row shadow-sm" data-formset="skills">
+                            <i class="fas fa-plus-circle me-2"></i>Add Another Skill
+                        </button>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-5">
+                        <a href="{% url 'edit_resume_section' resume.slug 'experience' %}" class="btn btn-outline-secondary shadow-sm">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Experience
+                        </a>
+                        <button type="submit" class="btn btn-primary shadow-sm" id="submit-skills">
+                            Save & Continue<i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Empty form template for JS -->
+            <div id="empty-skills-form" class="d-none">
+                <div class="form-row mb-4">
+                    {% if formset.can_delete %}
+                        <div class="d-flex justify-content-end mb-2">
+                            <div class="form-check">
+                                <input type="checkbox" name="{{ formset.empty_form.DELETE.html_name }}" id="{{ formset.empty_form.DELETE.id_for_label }}" class="form-check-input">
+                                <label for="{{ formset.empty_form.DELETE.id_for_label }}" class="form-check-label">{{ formset.empty_form.DELETE.label }}</label>
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ formset.empty_form.name.id_for_label }}" class="form-label">{{ formset.empty_form.name.label }}</label>
+                            <input type="text" name="{{ formset.empty_form.name.html_name }}" id="{{ formset.empty_form.name.id_for_label }}" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ formset.empty_form.level.id_for_label }}" class="form-label">{{ formset.empty_form.level.label }}</label>
+                            <select name="{{ formset.empty_form.level.html_name }}" id="{{ formset.empty_form.level.id_for_label }}" class="form-select">
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                                <option value="expert">Expert</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ formset.empty_form.description.id_for_label }}" class="form-label">{{ formset.empty_form.description.label }}</label>
+                        <textarea name="{{ formset.empty_form.description.html_name }}" id="{{ formset.empty_form.description.id_for_label }}" class="form-control" rows="2"></textarea>
+                        <small class="form-text text-muted">Brief description of your proficiency or specific aspects of this skill.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 d-none d-lg-block">
+            <div class="card sticky-top shadow-sm animate__animated animate__fadeInRight" style="top: 20px;">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-lightbulb me-2"></i>Tips for Skills</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-primary me-2"></i>
+                            List both technical and soft skills
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-primary me-2"></i>
+                            Be honest about your proficiency level
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-primary me-2"></i>
+                            Prioritize skills relevant to the job you're applying for
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-primary me-2"></i>
+                            Include specific software, tools, and technologies
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-primary me-2"></i>
+                            Add a brief description for context when helpful
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-footer bg-light">
+                    <p class="mb-0 small text-muted"><i class="fas fa-info-circle me-1"></i> Skills are among the first things recruiters scan for on your resume.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle "Add Another Skill" button
+        const addFormButton = document.querySelector('.add-form-row');
+        if (addFormButton) {
+            addFormButton.addEventListener('click', function() {
+                const formset = document.getElementById('skills-formset');
+                const emptyForm = document.getElementById('empty-skills-form').innerHTML;
+                const totalForms = document.getElementById('id_skill_set-TOTAL_FORMS');
+                
+                // Replace the __prefix__ in the template with the actual form count
+                const newForm = emptyForm.replace(/__prefix__/g, totalForms.value);
+                
+                // Insert the new form at the end of the formset
+                formset.insertAdjacentHTML('beforeend', newForm);
+                
+                // Update total forms count
+                totalForms.value = parseInt(totalForms.value) + 1;
+            });
+        }
+        
+        // Ensure form submits correctly and redirects to the projects section
+        const form = document.querySelector('form');
+        const submitButton = document.getElementById('submit-skills');
+        
+        if (submitButton) {
+            submitButton.addEventListener('click', function(e) {
+                // Ensure the form is actually submitted
+                form.submit();
+            });
+        }
+    });
+</script>
+{% endblock %}

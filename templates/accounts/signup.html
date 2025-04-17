@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Sign Up - ResumeCraft{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="form-container">
+                <h1 class="h3 mb-4 text-center">Create Your Account</h1>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {{ form|crispy }}
+                    
+                    <div class="d-grid mb-3 mt-4">
+                        <button type="submit" class="btn btn-primary">Sign Up</button>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+                    </div>
+                </form>
+                
+                <hr class="my-4">
+                
+                <div class="text-center">
+                    <p class="mb-3 text-muted">Or continue without an account</p>
+                    <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-user-ninja me-2"></i> Continue as Guest
+                    </a>
+                    <p class="small text-muted mt-3">
+                        Guest users can create and download resumes, but cannot save them to a dashboard.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+
+{% block title %}ResumeCraft - Free Professional Resume Builder{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1>Create a Standout Resume in Minutes</h1>
+                <p class="lead">Build a professional resume with our easy-to-use builder. Choose from 20+ templates, export as PDF, and land your dream job.</p>
+                <div class="d-grid gap-2 d-md-flex">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'create_resume' %}" class="btn btn-light btn-lg px-4 me-md-2">Create Resume</a>
+                        <a href="{% url 'dashboard' %}" class="btn btn-outline-light btn-lg px-4">Go to Dashboard</a>
+                    {% else %}
+                        <a href="{% url 'signup' %}" class="btn btn-light btn-lg px-4 me-md-2">Get Started</a>
+                        <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg px-4">Learn More</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <img src="/static/img/resume-hero.svg" alt="Resume Builder" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">How It Works</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <i class="fas fa-edit fa-3x text-primary"></i>
+                        </div>
+                        <h3 class="card-title h4">1. Fill in Your Details</h3>
+                        <p class="card-text">Enter your information through our simple step-by-step form. Include your work experience, education, skills, and more.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <i class="fas fa-palette fa-3x text-primary"></i>
+                        </div>
+                        <h3 class="card-title h4">2. Choose a Template</h3>
+                        <p class="card-text">Select from our library of 20 professionally designed resume templates. Each template is ATS-friendly and optimized for success.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <i class="fas fa-download fa-3x text-primary"></i>
+                        </div>
+                        <h3 class="card-title h4">3. Download & Share</h3>
+                        <p class="card-text">Export your resume as a beautifully formatted PDF. You can also create a public link to share with potential employers.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Templates Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="mb-3">Professional Resume Templates</h2>
+                <p class="lead">Choose from our selection of modern, professionally designed templates</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            {% for template in templates %}
+            <div class="col-md-4">
+                <div class="card h-100 template-card">
+                    {% if template.preview_image %}
+                    <img src="{{ template.preview_image.url }}" class="card-img-top" alt="{{ template.name }}">
+                    {% else %}
+                    <img src="/static/img/template-placeholder.png" class="card-img-top" alt="{{ template.name }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h3 class="card-title h5">{{ template.name }}</h3>
+                        <p class="card-text">{{ template.description|truncatewords:20 }}</p>
+                        <div class="d-flex mt-3">
+                            <span class="badge {% if template.is_dark_mode_supported %}bg-success{% else %}bg-secondary{% endif %} me-2">
+                                {% if template.is_dark_mode_supported %}Dark Mode{% else %}Light Mode Only{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p>No templates available yet. Please check back soon!</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-5">
+            <a href="{% url 'signup' %}" class="btn btn-primary btn-lg">Create Your Resume Now</a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Why Choose ResumeCraft?</h2>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="d-flex align-items-start">
+                    <div class="me-3 text-primary">
+                        <i class="fas fa-check-circle fa-2x"></i>
+                    </div>
+                    <div>
+                        <h3 class="h5">ATS-Friendly Templates</h3>
+                        <p>All our templates are optimized to pass Applicant Tracking Systems.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="d-flex align-items-start">
+                    <div class="me-3 text-primary">
+                        <i class="fas fa-check-circle fa-2x"></i>
+                    </div>
+                    <div>
+                        <h3 class="h5">Step-by-Step Builder</h3>
+                        <p>Our intuitive wizard makes creating your resume simple and fast.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="d-flex align-items-start">
+                    <div class="me-3 text-primary">
+                        <i class="fas fa-check-circle fa-2x"></i>
+                    </div>
+                    <div>
+                        <h3 class="h5">Save Multiple Versions</h3>
+                        <p>Create and save different versions of your resume for different job applications.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="d-flex align-items-start">
+                    <div class="me-3 text-primary">
+                        <i class="fas fa-check-circle fa-2x"></i>
+                    </div>
+                    <div>
+                        <h3 class="h5">Completely Free</h3>
+                        <p>All features are available for free, with no hidden costs or premium tiers.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">What Our Users Say</h2>
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body p-5">
+                                    <div class="text-center mb-4">
+                                        <i class="fas fa-quote-left fa-3x text-primary opacity-25"></i>
+                                    </div>
+                                    <p class="lead text-center mb-5">"ResumeCraft helped me create a professional resume that caught the attention of recruiters. I got three interview calls within a week of sending out my resume!"</p>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <div class="text-center">
+                                            <h5 class="mb-0">Michael Johnson</h5>
+                                            <small class="text-muted">Software Developer</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body p-5">
+                                    <div class="text-center mb-4">
+                                        <i class="fas fa-quote-left fa-3x text-primary opacity-25"></i>
+                                    </div>
+                                    <p class="lead text-center mb-5">"The templates are modern and professional. I love how easy it is to switch between different designs without having to re-enter all my information."</p>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <div class="text-center">
+                                            <h5 class="mb-0">Sarah Williams</h5>
+                                            <small class="text-muted">Marketing Specialist</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body p-5">
+                                    <div class="text-center mb-4">
+                                        <i class="fas fa-quote-left fa-3x text-primary opacity-25"></i>
+                                    </div>
+                                    <p class="lead text-center mb-5">"I was struggling to create a resume that stood out. ResumeCraft not only made it easy but also produced a much better result than I could have made on my own."</p>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <div class="text-center">
+                                            <h5 class="mb-0">David Chen</h5>
+                                            <small class="text-muted">Recent Graduate</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Create Your Professional Resume?</h2>
+        <p class="lead mb-4">Join thousands of job seekers who have successfully landed their dream jobs with ResumeCraft.</p>
+        <a href="{% url 'signup' %}" class="btn btn-light btn-lg">Get Started Now - It's Free!</a>
+    </div>
+</section>
+{% endblock %}

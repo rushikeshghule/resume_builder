@@ -1,0 +1,505 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ resume.personal_info.first_name }} {{ resume.personal_info.last_name }} - Resume</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap');
+        /* Professional Resume Template Styles - Enhanced */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
+        
+        :root {
+            --primary-color: #0a2540;
+            --primary-light: #1e3a5f;
+            --primary-dark: #051b38;
+            --secondary-color: #3c4d62;
+            --secondary-light: #64748b;
+            --accent-color: #0ea5e9;
+            --accent-light: #38bdf8;
+            --border-color: #e2e8f0;
+            --white: #ffffff;
+            --light-color: #f8fafc;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+            --gradient-primary: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            --gradient-accent: linear-gradient(to right, var(--accent-color), var(--accent-light));
+            --box-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-700);
+            background-color: var(--light-color);
+            margin: 0;
+            padding: 0;
+            font-size: 0.95rem;
+            letter-spacing: -0.01em;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .resume-container {
+            max-width: 8.5in;
+            margin: 0 auto;
+            background: white;
+            position: relative;
+        }
+        
+        .resume-body {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        
+        .main-column {
+            grid-column: 1;
+        }
+        
+        .side-column {
+            grid-column: 2;
+            background-color: var(--gray-50);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .resume-name {
+            font-size: 2.4rem;
+            font-weight: 700;
+            margin: 0 0 0.25rem 0;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .resume-title {
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin: 0 0 1.25rem 0;
+            opacity: 0.95;
+            color: var(--accent-light);
+            letter-spacing: 0.01em;
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .resume-content {
+            padding: 25px 40px;
+        }
+        
+        .resume-section {
+            margin-bottom: 35px;
+            position: relative;
+        }
+        
+        .main-column .resume-section:last-child,
+        .side-column .resume-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border-color);
+            position: relative;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--gradient-primary);
+        }
+        
+        .experience-item:before, .education-item:before, .project-item:before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            box-shadow: 0 0 0 3px rgba(10, 37, 64, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .experience-item:hover:before, .education-item:hover:before, .project-item:hover:before {
+            background: var(--gradient-accent);
+            transform: scale(1.2);
+        }
+        
+        .organization {
+            font-weight: 600;
+            font-size: 11pt;
+            color: var(--dark-color);
+        }
+        
+        .item-subtitle {
+            font-weight: 500;
+            margin: 0 0 0.5rem 0;
+            color: var(--accent-color);
+            font-size: 0.95rem;
+        }
+        
+        .date-range {
+            font-weight: 400;
+            font-size: 9pt;
+            color: var(--text-color);
+        }
+        
+        .location {
+            font-size: 9pt;
+            color: var(--text-color);
+        }
+        
+        .item-content {
+            margin-top: 0.75rem;
+            font-size: 0.95rem;
+            color: var(--gray-600);
+            line-height: 1.7;
+        }
+        
+        .achievements {
+            margin-top: 10px;
+        }
+        
+        .achievements li {
+            margin-bottom: 5px;
+            position: relative;
+            list-style-type: none;
+            padding-left: 15px;
+            font-size: 9pt;
+        }
+        
+        .achievements li::before {
+            content: "•";
+            color: var(--secondary-color);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+        
+        /* Two-column grid for skills and additional sections */
+        .skills-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        .skill-rating {
+            display: flex;
+            gap: 0.3rem;
+        }
+        
+        .resume-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 45px 40px;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .resume-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 40px;
+            width: 80px;
+            height: 3px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
+        
+        .language-item, .certification-item, .reference-item {
+            margin-bottom: 10px;
+        }
+        
+        .language-name, .certification-name, .reference-name {
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 10pt;
+        }
+        
+        .language-level, .certification-details, .reference-details {
+            font-size: 9pt;
+            color: var(--text-color);
+        }
+        
+        /* Print styles */
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                background: white;
+                font-size: 11pt;
+            }
+            
+            .resume-container {
+                width: 100%;
+                height: 100%;
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 0;
+            }
+            
+            .resume-body {
+                padding: 30px;
+                gap: 20px;
+            }
+            
+            .side-column {
+                background-color: var(--gray-50) !important;
+                box-shadow: none !important;
+            }
+            
+            .resume-header {
+                padding: 30px !important;
+            }
+        }
+        
+        body.is-pdf {
+            font-size: 11pt;
+        }
+        
+        body.is-pdf .resume-container {
+            box-shadow: none !important;
+            margin: 0 !important;
+        }
+        
+        body.is-pdf .resume-body {
+            padding: 30px;
+            gap: 20px;
+        }
+    </style>
+</head>
+<body class="{% if is_pdf %}is-pdf{% endif %}">
+    <div class="resume-container">
+        <div class="resume-header">
+            <div class="header-main">
+                <h1 class="name">{{ resume.personal_info.first_name }} {{ resume.personal_info.last_name }}</h1>
+                <h2 class="job-title">{{ resume.personal_info.job_title }}</h2>
+            </div>
+            <div class="header-contact">
+                <div class="contact-info">
+                    {% if resume.personal_info.email %}
+                    <div class="contact-item">{{ resume.personal_info.email }}</div>
+                    {% endif %}
+                    
+                    {% if resume.personal_info.phone %}
+                    <div class="contact-item">{{ resume.personal_info.phone }}</div>
+                    {% endif %}
+                    
+                    {% if resume.personal_info.city or resume.personal_info.state %}
+                    <div class="contact-item">
+                        {% if resume.personal_info.city %}{{ resume.personal_info.city }}{% endif %}
+                        {% if resume.personal_info.city and resume.personal_info.state %}, {% endif %}
+                        {% if resume.personal_info.state %}{{ resume.personal_info.state }}{% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    {% if resume.personal_info.linkedin %}
+                    <div class="contact-item">{{ resume.personal_info.linkedin }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            {% if photo_data_uri %}
+            <div class="header-photo">
+                <img src="{{ photo_data_uri }}" alt="{{ resume.personal_info.first_name }} {{ resume.personal_info.last_name }}" class="profile-pic">
+            </div>
+            {% elif resume.personal_info.photo_base64 %}
+            <div class="header-photo">
+                <img src="data:image/png;base64,{{ resume.personal_info.photo_base64 }}" alt="{{ resume.personal_info.first_name }} {{ resume.personal_info.last_name }}" class="profile-pic">
+            </div>
+            {% elif resume.personal_info.photo %}
+            <div class="header-photo">
+                <img src="{{ resume.personal_info.photo.url }}" alt="{{ resume.personal_info.first_name }} {{ resume.personal_info.last_name }}" class="profile-pic">
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="resume-content">
+            {% if resume.personal_info.summary %}
+            <section class="section">
+                <h3 class="section-title">Professional Summary</h3>
+                <div class="summary">
+                    {{ resume.personal_info.summary }}
+                </div>
+            </section>
+            {% endif %}
+            
+            {% if resume.work_experience.all %}
+            <section class="section">
+                <h3 class="section-title">Work Experience</h3>
+                {% for experience in resume.work_experience.all %}
+                <div class="experience-item">
+                    <div class="item-header">
+                        <div>
+                            <div class="organization">{{ experience.company }}</div>
+                            <div class="position">{{ experience.job_title }}</div>
+                            <div class="location">{{ experience.location }}</div>
+                        </div>
+                        <div class="date-range">
+                            {{ experience.start_date|date:"M Y" }} - 
+                            {% if experience.is_current %}Present{% else %}{{ experience.end_date|date:"M Y" }}{% endif %}
+                        </div>
+                    </div>
+                    {% if experience.description %}
+                    <div class="description">
+                        {{ experience.description }}
+                    </div>
+                    {% endif %}
+                    {% if experience.achievements %}
+                    <ul class="achievements">
+                        {% for achievement in experience.achievements_list %}
+                        <li>{{ achievement }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </section>
+            {% endif %}
+            
+            {% if resume.education.all %}
+            <section class="section">
+                <h3 class="section-title">Education</h3>
+                {% for education in resume.education.all %}
+                <div class="education-item">
+                    <div class="item-header">
+                        <div>
+                            <div class="organization">{{ education.institution }}</div>
+                            <div class="degree">{{ education.degree }}{% if education.field_of_study %}, {{ education.field_of_study }}{% endif %}</div>
+                            <div class="location">{{ education.location }}</div>
+                        </div>
+                        <div class="date-range">
+                            {{ education.start_date|date:"Y" }} - 
+                            {% if education.is_current %}Present{% else %}{{ education.end_date|date:"Y" }}{% endif %}
+                        </div>
+                    </div>
+                    {% if education.description %}
+                    <div class="description">
+                        {{ education.description }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </section>
+            {% endif %}
+            
+            <div class="grid-2col">
+                <div>
+                    {% if resume.skills.all %}
+                    <section class="section">
+                        <h3 class="section-title">Skills</h3>
+                        <div class="skills-content">
+                            {% for skill in resume.skills.all %}
+                            <div class="skill-item">{{ skill.name }}</div>
+                            {% endfor %}
+                        </div>
+                    </section>
+                    {% endif %}
+                    
+                    {% if resume.certifications.all %}
+                    <section class="section">
+                        <h3 class="section-title">Certifications</h3>
+                        {% for certification in resume.certifications.all %}
+                        <div class="certification-item">
+                            <div class="certification-name">{{ certification.name }}</div>
+                            <div class="certification-details">
+                                {{ certification.issuing_organization }} | {{ certification.date|date:"M Y" }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </section>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    {% if resume.languages.all %}
+                    <section class="section">
+                        <h3 class="section-title">Languages</h3>
+                        {% for language in resume.languages.all %}
+                        <div class="language-item">
+                            <div class="language-name">{{ language.name }}</div>
+                            <div class="language-level">{{ language.get_proficiency_level_display }}</div>
+                        </div>
+                        {% endfor %}
+                    </section>
+                    {% endif %}
+                    
+                    {% if resume.references.all %}
+                    <section class="section">
+                        <h3 class="section-title">References</h3>
+                        {% for reference in resume.references.all %}
+                        <div class="reference-item">
+                            <div class="reference-name">{{ reference.name }}</div>
+                            <div class="reference-details">{{ reference.position }} at {{ reference.company }}</div>
+                            {% if reference.email or reference.phone %}
+                            <div class="contact">{{ reference.email }}{% if reference.email and reference.phone %} | {% endif %}{{ reference.phone }}</div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </section>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

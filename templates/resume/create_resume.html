@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+{# {% load crispy_forms_tags %} #}
+
+{% block title %}Create New Resume - ResumeCraft{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="mb-4">Create New Resume</h1>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="form-container mb-5">
+                <form method="post" id="resume-form">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        {# {{ form.title|as_crispy_field }} #}
+                        <label for="{{ form.title.id_for_label }}" class="form-label">{{ form.title.label }}</label>
+                        <input type="text" name="title" id="{{ form.title.id_for_label }}" class="form-control" placeholder="Resume Title" {% if form.title.value %}value="{{ form.title.value }}"{% endif %} required>
+                        {% if form.title.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.title.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <input type="hidden" name="template" id="id_template" value="">
+                    
+                    <h4 class="mb-3">Choose a Template</h4>
+                    <div class="row template-selection">
+                        {% for template in templates %}
+                            <div class="col-md-4 mb-4">
+                                <div class="card template-card h-100" data-template-id="{{ template.id }}">
+                                    <div class="template-preview" data-template-image="{% static 'images/templates/' %}{{ template.template_file|cut:'.html' }}.jpg"></div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ template.name }}</h5>
+                                        <p class="card-text small">{{ template.description|truncatewords:10 }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="col-12">
+                                <div class="alert alert-warning">No templates available. Default template will be used.</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="form-check form-switch mb-4">
+                        {# {{ form.is_dark_mode|as_crispy_field }} #}
+                        <input type="checkbox" name="is_dark_mode" class="form-check-input" id="{{ form.is_dark_mode.id_for_label }}" {% if form.is_dark_mode.value %}checked{% endif %}>
+                        <label for="{{ form.is_dark_mode.id_for_label }}" class="form-check-label">{{ form.is_dark_mode.label }}</label>
+                    </div>
+                    
+                    <div class="form-check mb-4">
+                        {# {{ form.is_public|as_crispy_field }} #}
+                        <input type="checkbox" name="is_public" class="form-check-input" id="{{ form.is_public.id_for_label }}" {% if form.is_public.value %}checked{% endif %}>
+                        <label for="{{ form.is_public.id_for_label }}" class="form-check-label">{{ form.is_public.label }}</label>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Create & Continue</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set background images for template previews using data attributes
+        document.querySelectorAll('.template-preview').forEach(function(el) {
+            if (el.dataset.templateImage && el.dataset.templateImage !== 'None') {
+                el.style.backgroundImage = "url('" + el.dataset.templateImage + "')";
+                el.style.backgroundSize = 'cover';
+                el.style.backgroundPosition = 'center';
+                el.style.height = '200px';
+                el.style.width = '100%';
+                el.style.borderRadius = '0.375rem 0.375rem 0 0';
+            } else {
+                el.style.backgroundColor = "#f8f9fa";
+                el.style.height = '200px';
+                el.style.width = '100%';
+                // Create a centered placeholder text element
+                let placeholder = document.createElement('div');
+                placeholder.className = 'text-center text-muted d-flex align-items-center justify-content-center h-100';
+                placeholder.innerHTML = '<span>No Preview Available</span>';
+                el.appendChild(placeholder);
+            }
+        });
+
+        // Select the first template by default
+        const templateCards = document.querySelectorAll('.template-card');
+        const templateInput = document.getElementById('id_template');
+        if (templateCards.length > 0) {
+            templateCards[0].classList.add('selected');
+            templateInput.value = templateCards[0].dataset.templateId;
+        }
+        // Add click event listeners to all template cards
+        templateCards.forEach(card => {
+            card.addEventListener('click', function() {
+                templateCards.forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                templateInput.value = this.dataset.templateId;
+                console.log('Selected template ID:', templateInput.value);
+            });
+        });
+        // Add form submission debugging
+        const form = document.getElementById('resume-form');
+        form.addEventListener('submit', function(event) {
+            console.log('Form submitted');
+            console.log('Template value:', templateInput.value);
+            if (!templateInput.value) {
+                event.preventDefault();
+                alert('Please select a template first');
+                return false;
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Projects - ResumeCraft{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="section-header animate__animated animate__fadeIn">
+                <h1 class="h2 mb-2">Edit Projects</h1>
+                <p class="text-muted">Resume: <span class="fw-semibold text-primary">{{ resume.title }}</span></p>
+            </div>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a href="{% url 'resume_preview' resume.slug %}" class="btn btn-primary shadow-sm">
+                <i class="fas fa-eye me-2"></i> Preview Resume
+            </a>
+        </div>
+    </div>
+    <!-- Wizard Steps Navigation -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="wizard-steps">
+                <div class="wizard-step completed">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Personal</div>
+                </div>
+                <div class="wizard-step completed">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Education</div>
+                </div>
+                <div class="wizard-step completed">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Experience</div>
+                </div>
+                <div class="wizard-step completed">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Skills</div>
+                </div>
+                <div class="wizard-step active">
+                    <div class="step-number">5</div>
+                    <div class="step-label">Projects</div>
+                </div>
+                <div class="wizard-step">
+                    <div class="step-number">6</div>
+                    <div class="step-label">Certifications</div>
+                </div>
+                <div class="wizard-step">
+                    <div class="step-number">7</div>
+                    <div class="step-label">Languages</div>
+                </div>
+                <div class="wizard-step">
+                    <div class="step-number">8</div>
+                    <div class="step-label">References</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="form-container shadow-sm animate__animated animate__fadeIn">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ formset.management_form }}
+                    {{ formset.non_field_errors }}
+                    <div id="projects-formset">
+                        {% for form in formset %}
+                            <div class="project-form mb-4 form-section {% if not forloop.last %}border-bottom pb-4{% endif %}">
+                                <div class="section-header mb-4">
+                                    <h3 class="fs-5">Project #{{ forloop.counter }}</h3>
+                                </div>
+                                {% if formset.can_delete %}
+                                    <div class="d-flex justify-content-end mb-2">
+                                        <div class="form-check">
+                                            <input type="checkbox" name="{{ form.DELETE.html_name }}" id="{{ form.DELETE.id_for_label }}" class="form-check-input">
+                                            <label for="{{ form.DELETE.id_for_label }}" class="form-check-label">{{ form.DELETE.label }}</label>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="{{ form.title.id_for_label }}" class="form-label">{{ form.title.label }}</label>
+                                        <input type="text" name="{{ form.title.html_name }}" id="{{ form.title.id_for_label }}" class="form-control" {% if form.title.value %}value="{{ form.title.value }}"{% endif %}>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="{{ form.technologies.id_for_label }}" class="form-label">{{ form.technologies.label }}</label>
+                                        <input type="text" name="{{ form.technologies.html_name }}" id="{{ form.technologies.id_for_label }}" class="form-control" {% if form.technologies.value %}value="{{ form.technologies.value }}"{% endif %}>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="{{ form.start_date.id_for_label }}" class="form-label">{{ form.start_date.label }}</label>
+                                        <input type="date" name="{{ form.start_date.html_name }}" id="{{ form.start_date.id_for_label }}" class="form-control" {% if form.start_date.value %}value="{{ form.start_date.value|date:'Y-m-d' }}"{% endif %}>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="{{ form.end_date.id_for_label }}" class="form-label">{{ form.end_date.label }}</label>
+                                        <input type="date" name="{{ form.end_date.html_name }}" id="{{ form.end_date.id_for_label }}" class="form-control" {% if form.end_date.value %}value="{{ form.end_date.value|date:'Y-m-d' }}"{% endif %}>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" name="{{ form.is_current.html_name }}" id="{{ form.is_current.id_for_label }}" class="form-check-input" {% if form.is_current.value %}checked{% endif %}>
+                                    <label for="{{ form.is_current.id_for_label }}" class="form-check-label">Current Project</label>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="{{ form.url.id_for_label }}" class="form-label">{{ form.url.label }}</label>
+                                    <input type="url" name="{{ form.url.html_name }}" id="{{ form.url.id_for_label }}" class="form-control" {% if form.url.value %}value="{{ form.url.value }}"{% endif %}>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="{{ form.description.id_for_label }}" class="form-label">{{ form.description.label }}</label>
+                                    <textarea name="{{ form.description.html_name }}" id="{{ form.description.id_for_label }}" class="form-control" rows="3">{% if form.description.value %}{{ form.description.value }}{% endif %}</textarea>
+                                </div>
+                                
+                                {% for hidden in form.hidden_fields %}
+                                    {{ hidden }}
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-4 text-center">
+                        <button type="button" class="btn btn-outline-primary add-form-row shadow-sm" data-formset="projects">
+                            <i class="fas fa-plus-circle me-2"></i>Add Another Project
+                        </button>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-5">
+                        <a href="{% url 'edit_resume_section' resume.slug 'skills' %}" class="btn btn-outline-secondary shadow-sm">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Skills
+                        </a>
+                        <button type="submit" class="btn btn-primary shadow-sm" id="submit-projects">
+                            Save & Continue<i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 d-none d-lg-block">
+            <div class="card sticky-top shadow-sm animate__animated animate__fadeInRight" style="top: 20px;">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-lightbulb me-2"></i>Tips for Projects</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-primary me-2"></i>
+                            Showcase projects relevant to your target position
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-primary me-2"></i>
+                            Include personal, professional, and academic projects
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-primary me-2"></i>
+                            List technologies used in each project
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-primary me-2"></i>
+                            Add links to live demos or repositories when available
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-primary me-2"></i>
+                            Describe your role and key contributions clearly
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-footer bg-light">
+                    <p class="mb-0 small text-muted"><i class="fas fa-info-circle me-1"></i> Professional projects highlight your real-world experience and problem-solving abilities.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle "Add Another Project" button
+        const addFormButton = document.querySelector('.add-form-row');
+        if (addFormButton) {
+            addFormButton.addEventListener('click', function() {
+                const formset = document.getElementById('projects-formset');
+                const totalForms = document.getElementById('id_project_set-TOTAL_FORMS');
+                
+                // Create a new form by cloning the last one
+                const forms = formset.querySelectorAll('.project-form');
+                const newForm = forms[forms.length - 1].cloneNode(true);
+                
+                // Clear values in the cloned form
+                newForm.querySelectorAll('input[type="text"], input[type="url"], textarea').forEach(input => {
+                    input.value = '';
+                });
+                newForm.querySelectorAll('input[type="checkbox"]').forEach(input => {
+                    input.checked = false;
+                });
+                
+                // Update form indices
+                const formNum = parseInt(totalForms.value);
+                newForm.innerHTML = newForm.innerHTML.replace(new RegExp('project_set-' + (formNum-1), 'g'), 'project_set-' + formNum);
+                
+                // Insert the new form
+                formset.appendChild(newForm);
+                
+                // Update total forms count
+                totalForms.value = formNum + 1;
+            });
+        }
+        
+        // Ensure form submits correctly and redirects to the certifications section
+        const form = document.querySelector('form');
+        const submitButton = document.getElementById('submit-projects');
+        
+        if (submitButton) {
+            submitButton.addEventListener('click', function(e) {
+                // Make sure the form is properly submitted
+                form.submit();
+            });
+        }
+    });
+</script>
+{% endblock %}

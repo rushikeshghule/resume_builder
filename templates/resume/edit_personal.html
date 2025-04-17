@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Personal Information - ResumeCraft{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="h2 mb-3">Edit Personal Information</h1>
+            <p class="text-muted">Resume: {{ resume.title }}</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a href="{% url 'resume_preview' resume.slug %}" class="btn btn-primary">
+                <i class="fas fa-eye me-2"></i> Preview Resume
+            </a>
+        </div>
+    </div>
+    
+    <!-- Wizard Steps Navigation -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="wizard-steps">
+                <div class="wizard-step active">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Personal</div>
+                </div>
+                <div class="wizard-step">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Education</div>
+                </div>
+                <div class="wizard-step">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Experience</div>
+                </div>
+                <div class="wizard-step">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Skills</div>
+                </div>
+                <div class="wizard-step">
+                    <div class="step-number">5</div>
+                    <div class="step-label">Projects</div>
+                </div>
+                <div class="wizard-step">
+                    <div class="step-number">6</div>
+                    <div class="step-label">Certifications</div>
+                </div>
+                <div class="wizard-step">
+                    <div class="step-number">7</div>
+                    <div class="step-label">Languages</div>
+                </div>
+                <div class="wizard-step">
+                    <div class="step-number">8</div>
+                    <div class="step-label">References</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="form-container">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <h4>Contact Information</h4>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.first_name.id_for_label }}" class="form-label">{{ form.first_name.label }}</label>
+                                <input type="text" name="first_name" id="{{ form.first_name.id_for_label }}" class="form-control" {% if form.first_name.value %}value="{{ form.first_name.value }}"{% endif %}>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.last_name.id_for_label }}" class="form-label">{{ form.last_name.label }}</label>
+                                <input type="text" name="last_name" id="{{ form.last_name.id_for_label }}" class="form-control" {% if form.last_name.value %}value="{{ form.last_name.value }}"{% endif %}>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.job_title.id_for_label }}" class="form-label">{{ form.job_title.label }}</label>
+                            <input type="text" name="job_title" id="{{ form.job_title.id_for_label }}" class="form-control" {% if form.job_title.value %}value="{{ form.job_title.value }}"{% endif %}>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
+                                <input type="email" name="email" id="{{ form.email.id_for_label }}" class="form-control" {% if form.email.value %}value="{{ form.email.value }}"{% endif %}>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.phone.id_for_label }}" class="form-label">{{ form.phone.label }}</label>
+                                <input type="text" name="phone" id="{{ form.phone.id_for_label }}" class="form-control" {% if form.phone.value %}value="{{ form.phone.value }}"{% endif %}>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4>Address</h4>
+                        <div class="mb-3">
+                            <label for="{{ form.address.id_for_label }}" class="form-label">{{ form.address.label }}</label>
+                            <input type="text" name="address" id="{{ form.address.id_for_label }}" class="form-control" {% if form.address.value %}value="{{ form.address.value }}"{% endif %}>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.city.id_for_label }}" class="form-label">{{ form.city.label }}</label>
+                                <input type="text" name="city" id="{{ form.city.id_for_label }}" class="form-control" {% if form.city.value %}value="{{ form.city.value }}"{% endif %}>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.state.id_for_label }}" class="form-label">{{ form.state.label }}</label>
+                                <input type="text" name="state" id="{{ form.state.id_for_label }}" class="form-control" {% if form.state.value %}value="{{ form.state.value }}"{% endif %}>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.zipcode.id_for_label }}" class="form-label">{{ form.zipcode.label }}</label>
+                                <input type="text" name="zipcode" id="{{ form.zipcode.id_for_label }}" class="form-control" {% if form.zipcode.value %}value="{{ form.zipcode.value }}"{% endif %}>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.country.id_for_label }}" class="form-label">{{ form.country.label }}</label>
+                                <input type="text" name="country" id="{{ form.country.id_for_label }}" class="form-control" {% if form.country.value %}value="{{ form.country.value }}"{% endif %}>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4>Online Presence</h4>
+                        <div class="mb-3">
+                            <label for="{{ form.website.id_for_label }}" class="form-label">{{ form.website.label }}</label>
+                            <input type="url" name="website" id="{{ form.website.id_for_label }}" class="form-control" {% if form.website.value %}value="{{ form.website.value }}"{% endif %}>
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.linkedin.id_for_label }}" class="form-label">{{ form.linkedin.label }}</label>
+                            <input type="url" name="linkedin" id="{{ form.linkedin.id_for_label }}" class="form-control" {% if form.linkedin.value %}value="{{ form.linkedin.value }}"{% endif %}>
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.github.id_for_label }}" class="form-label">{{ form.github.label }}</label>
+                            <input type="url" name="github" id="{{ form.github.id_for_label }}" class="form-control" {% if form.github.value %}value="{{ form.github.value }}"{% endif %}>
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.twitter.id_for_label }}" class="form-label">{{ form.twitter.label }}</label>
+                            <input type="url" name="twitter" id="{{ form.twitter.id_for_label }}" class="form-control" {% if form.twitter.value %}value="{{ form.twitter.value }}"{% endif %}>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4>Profile Summary</h4>
+                        <div class="mb-3">
+                            <label for="{{ form.summary.id_for_label }}" class="form-label">{{ form.summary.label }}</label>
+                            <textarea name="summary" id="{{ form.summary.id_for_label }}" class="form-control" rows="4">{% if form.summary.value %}{{ form.summary.value }}{% endif %}</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4>Profile Photo</h4>
+                        <div class="mb-3">
+                            <label for="{{ form.photo.id_for_label }}" class="form-label">{{ form.photo.label }}</label>
+                            <input type="file" name="photo" id="{{ form.photo.id_for_label }}" class="form-control">
+                        </div>
+                        {% if form.instance.photo %}
+                            <div class="mb-3">
+                                <img src="{{ form.instance.photo.url }}" alt="Profile Photo" class="img-thumbnail" style="max-width: 150px;">
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save & Continue</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 d-none d-lg-block">
+            <div class="card sticky-top" style="top: 20px;">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Tips for Personal Info</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <i class="fas fa-info-circle text-primary me-2"></i>
+                            Use a professional email address
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-info-circle text-primary me-2"></i>
+                            Your job title should match the position you're applying for
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-info-circle text-primary me-2"></i>
+                            Keep your summary concise (3-5 sentences)
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-info-circle text-primary me-2"></i>
+                            Include relevant social profiles only
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-info-circle text-primary me-2"></i>
+                            Profile photos are optional but can be beneficial for certain industries
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
