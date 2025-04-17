@@ -27,17 +27,17 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-umq(bc06vel@du6@03i@h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-# Use environment variables with sensible defaults including Railway.app domain
-ALLOWED_HOSTS = os.environ.get(
-    'ALLOWED_HOSTS', 
-    '0.0.0.0,127.0.0.1,localhost,resumebuilder-production-9828.up.railway.app'
-).split(',')
+# Allow all hosts in Railway.app environment
+ALLOWED_HOSTS = ['*']
 
 # Get CSRF trusted origins from environment or use defaults including Railway.app domain
-CSRF_TRUSTED_ORIGINS = os.environ.get(
-    'CSRF_TRUSTED_ORIGINS',
-    'http://127.0.0.1:39313,http://0.0.0.0:8000,http://localhost:8000,https://resumebuilder-production-9828.up.railway.app'
-).split(',')
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.up.railway.app',
+    'https://*.railway.app',
+    'http://127.0.0.1:39313',
+    'http://0.0.0.0:8000',
+    'http://localhost:8000'
+]
 
 # Application definition
 

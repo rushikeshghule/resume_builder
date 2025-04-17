@@ -36,5 +36,9 @@ ENV PYTHONUNBUFFERED=1
 ENV DEBUG=False
 ENV ALLOWED_HOSTS=*
 
+# Make sure the entrypoint script is executable
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # Run migrations and start server
-CMD python manage.py migrate && gunicorn resumecraft.wsgi:application --bind 0.0.0.0:$PORT
+CMD ["/entrypoint.sh"]
