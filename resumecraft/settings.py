@@ -31,7 +31,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:39313',
     'http://0.0.0.0:8000',
     'http://localhost:8000',
-    'resumebuilder-production-9828.up.railway.app'
+    'resumebuilder-production-9828.up.railway.app',
 ]
 
 # Application definition
