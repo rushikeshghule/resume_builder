@@ -25,12 +25,13 @@ SECRET_KEY = 'django-insecure-umq(bc06vel@du6@03i@h1^yeh0v_i6w+10m8bolbtw^*i)1c%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost','resumebuilder-production-9828.up.railway.app']
 
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:39313',
     'http://0.0.0.0:8000',
     'http://localhost:8000',
+    'resumebuilder-production-9828.up.railway.app'
 ]
 
 # Application definition
