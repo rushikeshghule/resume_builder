@@ -296,9 +296,7 @@ def delete_resume(request, slug):
     return render(request, 'resume/delete_resume.html', {'resume': resume})
 
 def download_pdf(request, slug):
-    from weasyprint import HTML, CSS
     """Generate and download a PDF version of the resume"""
-    WEASYPRINT_AVAILABLE=True
     resume = get_object_or_404(Resume, slug=slug)
     
     # Check permissions
@@ -374,7 +372,35 @@ def download_pdf(request, slug):
     # Render the template with resume data
     html_string = render_to_string(template_path, context)
     
-    # Check if WeasyPrint is available
+    # Check if we're in Railway.app environment (check for RAILWAY_* environment variables)
+    in_railway = any(key.startswith('RAILWAY_') for key in os.environ.keys())
+    
+    # In Railway environment, use a print-friendly HTML view as fallback
+    if in_railway:
+        # Add a print-friendly parameter to the context
+        context['print_friendly'] = True
+        context['is_pdf_fallback'] = True
+        
+        # Return a print-friendly view with print script
+        response = render(request, template_path, context)
+        
+        # Add custom headers to suggest printing
+        filename = f"resume_{slugify(resume.title)}_{datetime.now().strftime('%Y%m%d')}.pdf"
+        response['Content-Disposition'] = f'inline; filename="{filename}"'
+        
+        # Add a script to automatically trigger print dialog
+        response.content = response.content.decode('utf-8').replace('</body>', '''<script>
+            // Auto-print after a short delay to allow resources to load
+            window.onload = function() {
+                setTimeout(function() {
+                    window.print();
+                }, 1000);
+            };
+        </script></body>''').encode('utf-8')
+        
+        return response
+    
+    # For non-Railway environments, try WeasyPrint
     if WEASYPRINT_AVAILABLE:
         try:
             # Use the base URL from the request to help resolve relative URLs
@@ -417,6 +443,7 @@ def download_pdf(request, slug):
         # WeasyPrint not available, render HTML view instead
         messages.warning(request, "PDF generation is not available in this environment. Showing HTML preview instead.")
         return render(request, template_path, context)
+
 
 def public_resume(request, slug):
     """View for public resume links"""
