@@ -298,6 +298,7 @@ def delete_resume(request, slug):
 def download_pdf(request, slug):
     from weasyprint import HTML, CSS
     """Generate and download a PDF version of the resume"""
+    WEASYPRINT_AVAILABLE=True
     resume = get_object_or_404(Resume, slug=slug)
     
     # Check permissions
