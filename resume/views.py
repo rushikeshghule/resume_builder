@@ -19,13 +19,7 @@ import copy
 from datetime import datetime
 
 # Try to import WeasyPrint, but don't fail if it's not available
-WEASYPRINT_AVAILABLE = False
-try:
-    from weasyprint import HTML, CSS
-    WEASYPRINT_AVAILABLE = True
-except ImportError:
-    # WeasyPrint not available, will use fallback for PDF generation
-    pass
+
 
 from .models import (
     Resume, Education, WorkExperience, 
@@ -302,6 +296,7 @@ def delete_resume(request, slug):
     return render(request, 'resume/delete_resume.html', {'resume': resume})
 
 def download_pdf(request, slug):
+    from weasyprint import HTML, CSS
     """Generate and download a PDF version of the resume"""
     resume = get_object_or_404(Resume, slug=slug)
     
